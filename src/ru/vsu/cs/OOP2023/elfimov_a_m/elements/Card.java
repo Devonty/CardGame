@@ -1,4 +1,4 @@
-package ru.vsu.cs.OOP2023.elfimov_a_m;
+package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 
 import java.util.Arrays;
 
@@ -6,12 +6,13 @@ public class Card {
     public static final int HEIGHT = 4, WIDTH = 5;
     public static final String[] cardSuits = new String[]{"♣","♠", "♥", "♦" };
 
-    public static final String[] cardValues36 = new String[]{" 6"," 7"," 8"," 9","10"," J"," Q"," K"," A"};
+    public static final String[] cardValues36 = new String[]{" 6", " 7"," 8"," 9","10"," J"," Q"," K"," A"};
     public static final String[] cardValues56 = new String[]{" 1"," 2"," 3"," 4"," 5"," 6"," 7"," 8"," 9","10"," J"," Q"," K"," A"};
 
     private final String suit;
     private final String value;
 
+    private boolean isTrump;
     private final String[] stringImageLines;
 
     public Card(String suit, String value) {
@@ -21,6 +22,7 @@ public class Card {
         stringImageLines = new String[HEIGHT];
         buildStringImageLines();
     }
+
 
     private void buildStringImageLines(){
         stringImageLines[0] = "+---+";
@@ -36,6 +38,13 @@ public class Card {
 
     }
 
+    public boolean isTrump() {
+        return isTrump;
+    }
+
+    public void setTrump(boolean trump) {
+        isTrump = trump;
+    }
     public String getSuit() {
         return suit;
     }
