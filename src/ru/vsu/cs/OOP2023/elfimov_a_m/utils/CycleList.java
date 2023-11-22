@@ -6,7 +6,7 @@ import java.util.Collection;
 public class CycleList<T> extends ArrayList<T> {
     @Override
     public T get(int index) {
-        return super.get(index % size());
+        return super.get((index + size()) % size());
     }
 
     public CycleList(int initialCapacity) {

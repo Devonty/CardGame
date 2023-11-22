@@ -1,15 +1,12 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class CardDeck {
 
     public final boolean isSize36;
 
-    public final List<Card> cards;
+    public final LinkedList<Card> cards;
     public final String[] values;
 
     private String trumpSuit;
@@ -22,36 +19,44 @@ public class CardDeck {
     public CardDeck(boolean isSize36) {
         this.isSize36 = isSize36;
         this.cards = new LinkedList<>();
-        this.values = isSize36 ? Card.cardValues36 : Card.cardValues56;
+        this.values = isSize36 ? Card.cardValues36 : Card.cardValues52;
 
         restart();
     }
 
-    public void restart(){
+    public void restart() {
+        chooseTrump();
         generateCards();
         shuffleCards();
-        chooseTrump();
     }
 
+    public Card takeTopCard() {
+        assert !isEmpty(): "Колода кончилась";
+        return cards.removeLast();
+    }
+
+    public boolean isEmpty(){
+        return cards.isEmpty();
+    }
+    public int size(){
+        return cards.size();
+    }
     private void chooseTrump() {
         Random rd = new Random();
-
-        trumpSuit =  cards.get(rd.nextInt(0, values.length)).getSuit();
-        for(Card card : cards){
-            card.setTrump(card.getSuit().equals(trumpSuit));
-        }
+        trumpSuit = Card.cardSuits[rd.nextInt(Card.cardSuits.length)];
     }
 
-    private void generateCards(){
+    private void generateCards() {
         // init cards
         for (String suit : Card.cardSuits) {
-            for(String value : values){
-                cards.add(new Card(suit, value));
+            for (String value : values) {
+                Card card = new Card(suit, value, suit.equals(trumpSuit));
+                cards.add(card);
             }
         }
     }
 
-    private void shuffleCards(){
+    private void shuffleCards() {
         Collections.shuffle(cards);
     }
 

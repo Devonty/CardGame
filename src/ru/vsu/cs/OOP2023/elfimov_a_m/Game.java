@@ -4,21 +4,47 @@ import ru.vsu.cs.OOP2023.elfimov_a_m.elements.*;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.CycleList;
 
 public class Game {
-    public static final int PLAYER_COUNT = 2;
-    private CycleList<Player> players;
-    private GameDesk gameDesk;
-    private GameController gameController;
+    public static final int PLAYER_COUNT = 3;
+    protected CycleList<UserPlayer> players;
+    protected GameDesk gameDesk;
+    protected GameController gameController;
 
-    private int indexOfPlayerToAttack;
-    private int indexOfPlayerToDefend;
 
     public Game() {
         players = new CycleList<>(PLAYER_COUNT);
         for (int i = 0; i < PLAYER_COUNT; i++) {
-            players.add(new Player());
+            players.add(new BotPlayer("Player_"+i));
         }
 
         gameDesk = new GameDesk();
         gameController = new GameController(this);
+    }
+
+    public void printForPlayer(UserPlayer player){
+        System.out.println("=".repeat(80));
+        System.out.println("=".repeat(80));
+        System.out.println("=".repeat(80));
+        gameDesk.print();
+        System.out.println("Ход игрока: "  + player.name);
+        player.printCardOnHand();
+    }
+    public UserPlayer start(){
+        // returns loser
+        while(!gameController.isEndOfGame()) gameController.playRound();
+        System.out.println("Игра окончена!");
+        return getLoser();
+    }
+
+    private UserPlayer getLoser(){
+        for (UserPlayer player : players) {
+            if (player.countCardsOnHand() != 0) {
+                System.out.println(player.name + " Проиграл");
+                return player;
+            }
+        }
+        return null; // draw
+    }
+    public final GameDesk getGameDesk() {
+        return gameDesk;
     }
 }
