@@ -3,7 +3,7 @@ package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class BotPlayer extends UserPlayer {
+public class BotPlayer extends Player {
     public int index = 0;
 
     public BotPlayer(String name) {
@@ -29,5 +29,9 @@ public class BotPlayer extends UserPlayer {
                 };
             }
         });
+    }
+    public void addCard(Card cardToAdd){
+        cardsOnHand.add(cardToAdd);
+        sortCardsOnHand();
     }
 }

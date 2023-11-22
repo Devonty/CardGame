@@ -5,7 +5,7 @@ import ru.vsu.cs.OOP2023.elfimov_a_m.utils.CycleList;
 
 public class Game {
     public static final int PLAYER_COUNT = 3;
-    protected CycleList<UserPlayer> players;
+    protected CycleList<Player> players;
     protected GameDesk gameDesk;
     protected GameController gameController;
 
@@ -20,7 +20,7 @@ public class Game {
         gameController = new GameController(this);
     }
 
-    public void printForPlayer(UserPlayer player){
+    public void printForPlayer(Player player){
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));
@@ -28,15 +28,15 @@ public class Game {
         System.out.println("Ход игрока: "  + player.name);
         player.printCardOnHand();
     }
-    public UserPlayer start(){
+    public Player start(){
         // returns loser
         while(!gameController.isEndOfGame()) gameController.playRound();
         System.out.println("Игра окончена!");
         return getLoser();
     }
 
-    private UserPlayer getLoser(){
-        for (UserPlayer player : players) {
+    private Player getLoser(){
+        for (Player player : players) {
             if (player.countCardsOnHand() != 0) {
                 System.out.println(player.name + " Проиграл");
                 return player;

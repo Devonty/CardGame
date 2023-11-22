@@ -91,7 +91,7 @@ public class GameDesk {
         return false;
     }
 
-    public void giveAllDeskCardToPlayer(UserPlayer defender) {
+    public void giveAllDeskCardToPlayer(Player defender) {
         // if defender take pass
         for (Card card : cardsToBeat) {
             defender.addCard(card);

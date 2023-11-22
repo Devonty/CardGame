@@ -2,7 +2,7 @@ package ru.vsu.cs.OOP2023.elfimov_a_m.utils;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
 import ru.vsu.cs.OOP2023.elfimov_a_m.GameController;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.UserPlayer;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Player;
 
 import java.util.Scanner;
 
@@ -13,7 +13,7 @@ public class ConsoleToPlayer {
         this.gameController = gameController;
     }
 
-    public static TurnRecord askForAttack(UserPlayer player, Game game) {
+    public static TurnRecord askForAttack(Player player, Game game) {
         game.printForPlayer(player);
         System.out.println("Меню (Атака)\n1. Добавить карту\n2. Пасс");
 
@@ -35,7 +35,7 @@ public class ConsoleToPlayer {
 
     }
 
-    public static TurnRecord askForDefend(UserPlayer player, Game game, int countCardsToBeat ) {
+    public static TurnRecord askForDefend(Player player, Game game, int countCardsToBeat ) {
         game.printForPlayer(player);
 
         System.out.println("Меню (Защита)\n1. Отбить карту\n2. Стянуть");

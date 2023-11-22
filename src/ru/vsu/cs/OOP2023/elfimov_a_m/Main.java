@@ -31,7 +31,7 @@ public class Main {
     }
 
     public static void testPlayer(){
-        UserPlayer player = new BotPlayer("Player_test");
+        Player player = new BotPlayer("Player_test");
         CardDeck cardDeck = new CardDeck();
 
         System.out.println("TrumpSuit is " + cardDeck.getTrumpSuit());
@@ -66,16 +66,12 @@ public class Main {
         PrintUtils.printCardDeck(cardDeck, 9, 6);
     }
     public static void main(String[] args) {
-        botSortTest();
-        if(true) return;
-
-
-        int game_to_play = 100;
+        int game_to_play = 1000;
         Map<String, Integer> map = new HashMap<>();
-        UserPlayer draw =  new UserPlayer("Draw");
+        Player draw =  new Player("Draw");
         while (game_to_play-- != 0) {
             Game game = new Game();
-            UserPlayer loser = game.start();
+            Player loser = game.start();
             if (loser == null) loser = draw;
             map.putIfAbsent(loser.name, 0);
             map.put(loser.name, map.get(loser.name) + 1);
