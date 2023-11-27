@@ -16,4 +16,6 @@ public interface Player {
     void printCardOnHand();
     int countCardsOnHand();
 
+    TurnRecord askForAttack(GameDesk gameDesk);
+    TurnRecord askForDefend(GameDesk gameDesk);
 }

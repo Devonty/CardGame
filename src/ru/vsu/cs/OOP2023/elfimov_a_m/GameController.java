@@ -23,20 +23,12 @@ public class GameController {
 
     private TurnRecord askForDefend(Player defender) {
         game.printForPlayer(defender);
-
-        if (defender instanceof BotPlayer) {
-            return BotPlayerTurns.askForDefend(defender, gameDesk);
-        }
-        return ConsoleToPlayer.askForDefend(defender, gameDesk);
+        return defender.askForDefend(gameDesk);
     }
 
     private TurnRecord askForAttack(Player attacker) {
         game.printForPlayer(attacker);
-
-        if (attacker instanceof BotPlayer) {
-            return BotPlayerTurns.askForAttack(attacker, gameDesk);
-        }
-        return ConsoleToPlayer.askForAttack(attacker);
+        return attacker.askForAttack(gameDesk);
     }
 
     private void makeDefendTurn() {
@@ -155,9 +147,10 @@ public class GameController {
         // clear desk
         gameDesk.clearDesk();
         // next player
-        if (defenderDoTakePass) indexOfPlayerToDefend++; // skip defender
-        indexOfPlayerToDefend = (indexOfPlayerToDefend + 1) % Game.PLAYER_COUNT;
+        if (defenderDoTakePass) indexOfPlayerToDefend++; // skip defender if he did TakePass
+        indexOfPlayerToDefend = (indexOfPlayerToDefend + 1) % Game.PLAYER_COUNT; // normalize;
         fillCardsToPlayersFromCardDeck();
+
         System.out.println("В колоде осталось: " + cardDeck.size());
 
 
