@@ -1,6 +1,9 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.*;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.BotPlayer;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.UserPlayer;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.PrintUtils;
 
 import java.util.Arrays;
@@ -65,7 +68,7 @@ public class Main {
         PrintUtils.printCardDeck(cardDeck, 9, 6);
     }
     public static void main(String[] args) {
-        int game_to_play = 100;
+        int game_to_play = 1000;
 
         Map<String, Integer> map = new HashMap<>();
         Player draw =  new UserPlayer("Draw");

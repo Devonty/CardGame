@@ -1,5 +1,7 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
+
 import java.util.*;
 
 import static ru.vsu.cs.OOP2023.elfimov_a_m.utils.PrintUtils.printCardsInLine;

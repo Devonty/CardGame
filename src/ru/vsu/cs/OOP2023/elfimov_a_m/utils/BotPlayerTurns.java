@@ -1,10 +1,8 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.utils;
 
-import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.BotPlayer;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameDesk;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Player;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 
 public class BotPlayerTurns {
     public static TurnRecord askForAttack(Player bot, GameDesk gameDesk) {

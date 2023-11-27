@@ -1,9 +1,8 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.utils;
 
-import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
-import ru.vsu.cs.OOP2023.elfimov_a_m.GameController;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameController;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameDesk;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Player;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 
 import java.util.Scanner;
 

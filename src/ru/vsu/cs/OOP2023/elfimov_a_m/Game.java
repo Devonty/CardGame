@@ -1,6 +1,8 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.*;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.BotPlayer;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.CycleList;
 
 public class Game {
@@ -27,6 +29,7 @@ public class Game {
     }
 
     public void printForPlayer(Player player){
+        if(true) return;
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));

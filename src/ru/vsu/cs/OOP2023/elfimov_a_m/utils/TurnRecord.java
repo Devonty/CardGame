@@ -1,6 +1,6 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.utils;
 
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Player;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 
 public record TurnRecord(Turn turn, Player player, int cardToBeatIndex, int cardThatBeatIndex) {
     public enum Turn {BEATS, PASS, ADDING, WRONG_TURN, TAKE_PASS}
