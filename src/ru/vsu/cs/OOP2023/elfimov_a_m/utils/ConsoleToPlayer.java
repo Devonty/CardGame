@@ -2,6 +2,7 @@ package ru.vsu.cs.OOP2023.elfimov_a_m.utils;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
 import ru.vsu.cs.OOP2023.elfimov_a_m.GameController;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameDesk;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Player;
 
 import java.util.Scanner;
@@ -13,8 +14,7 @@ public class ConsoleToPlayer {
         this.gameController = gameController;
     }
 
-    public static TurnRecord askForAttack(Player player, Game game) {
-        game.printForPlayer(player);
+    public static TurnRecord askForAttack(Player player) {
         System.out.println("Меню (Атака)\n1. Добавить карту\n2. Пасс");
 
         switch (new Scanner(System.in).nextInt()) {
@@ -35,8 +35,7 @@ public class ConsoleToPlayer {
 
     }
 
-    public static TurnRecord askForDefend(Player player, Game game, int countCardsToBeat ) {
-        game.printForPlayer(player);
+    public static TurnRecord askForDefend(Player player, GameDesk gameDesk) {
 
         System.out.println("Меню (Защита)\n1. Отбить карту\n2. Стянуть");
 
@@ -45,7 +44,7 @@ public class ConsoleToPlayer {
                 player.printCardOnHand();
 
                 System.out.print("Что побить: ");
-                int indexToBeat = getIndexInRange(countCardsToBeat);
+                    int indexToBeat = getIndexInRange(gameDesk.size());
                 if (indexToBeat == -1) return TurnRecord.WRONG_TURN_RECORD;
 
                 System.out.print("Чем побить: ");
