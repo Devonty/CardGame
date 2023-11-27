@@ -68,7 +68,7 @@ public class Main {
         PrintUtils.printCardDeck(cardDeck, 9, 6);
     }
     public static void main(String[] args) {
-        int game_to_play = 1000;
+        int game_to_play = 100;
 
         Map<String, Integer> map = new HashMap<>();
         Player draw =  new UserPlayer("Draw");

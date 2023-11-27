@@ -1,18 +1,11 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.utils;
 
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameController;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameDesk;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 
 import java.util.Scanner;
 
 public class ConsoleToPlayer {
-    private GameController gameController;
-
-    public ConsoleToPlayer(GameController gameController) {
-        this.gameController = gameController;
-    }
-
     public static TurnRecord askForAttack(Player player) {
         System.out.println("Меню (Атака)\n1. Добавить карту\n2. Пасс");
 

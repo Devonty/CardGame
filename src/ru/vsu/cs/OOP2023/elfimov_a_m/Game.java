@@ -29,7 +29,6 @@ public class Game {
     }
 
     public void printForPlayer(Player player){
-        if(true) return;
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));

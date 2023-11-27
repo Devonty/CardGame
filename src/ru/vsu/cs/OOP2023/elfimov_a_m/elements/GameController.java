@@ -1,7 +1,6 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.*;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.TurnRecord;
 
