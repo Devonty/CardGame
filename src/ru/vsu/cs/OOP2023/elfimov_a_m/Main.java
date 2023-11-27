@@ -27,7 +27,6 @@ public class Main {
 
         gameDesk.print();
 
-        PrintUtils.printCardDeck(gameDesk.cardDeck,5, 20);
     }
 
     public static void testPlayer(){
@@ -66,17 +65,17 @@ public class Main {
         PrintUtils.printCardDeck(cardDeck, 9, 6);
     }
     public static void main(String[] args) {
-        int game_to_play = 1000;
+        int game_to_play = 100;
 
         Map<String, Integer> map = new HashMap<>();
-        Player draw =  new Player("Draw");
+        Player draw =  new UserPlayer("Draw");
 
         while (game_to_play-- != 0) {
             Game game = new Game();
             Player loser = game.start();
             if (loser == null) loser = draw;
-            map.putIfAbsent(loser.name, 0);
-            map.put(loser.name, map.get(loser.name) + 1);
+            map.putIfAbsent(loser.getName(), 0);
+            map.put(loser.getName(), map.get(loser.getName()) + 1);
         }
 
         System.out.println(map);

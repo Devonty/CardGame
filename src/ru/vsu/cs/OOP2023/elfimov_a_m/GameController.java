@@ -1,47 +1,51 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m;
 
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.BotPlayer;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameDesk;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Player;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.*;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.BotPlayerTurns;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.ConsoleToPlayer;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.TurnRecord;
 
 public class GameController {
-    private ConsoleToPlayer consoleToPlayer;
     private final Game game;
+    private final GameDesk gameDesk;
+    private final CardDeck cardDeck;
     private int indexOfPlayerToDefend = 0;
 
     private boolean isAllPass = false;
     private boolean defenderDoTakePass = false;
 
-    public GameController(Game game) {
+    public GameController(Game game, GameDesk gameDesk, CardDeck cardDeck) {
         this.game = game;
+        this.gameDesk = gameDesk;
+        this.cardDeck = cardDeck;
         fillCardsToPlayersFromCardDeck();
     }
 
     private TurnRecord askForDefend(Player defender) {
+        game.printForPlayer(defender);
+
         if (defender instanceof BotPlayer) {
-            return BotPlayerTurns.askForDefend((BotPlayer) defender, game, game.gameDesk.size());
+            return BotPlayerTurns.askForDefend(defender, gameDesk);
         }
-        return ConsoleToPlayer.askForDefend(defender, game, game.gameDesk.size());
+        return ConsoleToPlayer.askForDefend(defender, gameDesk);
     }
 
     private TurnRecord askForAttack(Player attacker) {
+        game.printForPlayer(attacker);
+
         if (attacker instanceof BotPlayer) {
-            return BotPlayerTurns.askForAttack((BotPlayer) attacker, game);
+            return BotPlayerTurns.askForAttack(attacker, gameDesk);
         }
-        return ConsoleToPlayer.askForAttack(attacker, game);
+        return ConsoleToPlayer.askForAttack(attacker);
     }
 
     private void makeDefendTurn() {
         defenderDoTakePass = false;
-        Player defender = game.players.get(indexOfPlayerToDefend);
+        Player defender = game.getPlayer(indexOfPlayerToDefend);
         TurnRecord turnRecord = TurnRecord.WRONG_TURN_RECORD;
 
         // Make turn while not allBeaten
-        while (!game.gameDesk.allBeaten()) {
+        while (!gameDesk.allBeaten()) {
             // for err turns
             while (turnRecord == TurnRecord.WRONG_TURN_RECORD) {
                 turnRecord = askForDefend(defender);
@@ -53,7 +57,7 @@ public class GameController {
                 int indexCardToBeat = turnRecord.cardToBeatIndex();
                 Card cardThatBeat = defender.takeCardAt(turnRecord.cardThatBeatIndex());
 
-                if (!game.gameDesk.beatCardAtBy(indexCardToBeat, cardThatBeat)) {
+                if (!gameDesk.beatCardAtBy(indexCardToBeat, cardThatBeat)) {
                     defender.addCard(cardThatBeat); // put back
                 }
             }
@@ -63,7 +67,7 @@ public class GameController {
                 defenderDoTakePass = true;
                 System.out.println("Игрок тянет карты! Можете добавить карты на стол!" + "<- ".repeat(10));
                 makeAttackTurn();
-                game.gameDesk.giveAllDeskCardToPlayer(defender);
+                gameDesk.giveAllDeskCardsToPlayer(defender);
                 return;
             }
             turnRecord = TurnRecord.WRONG_TURN_RECORD;
@@ -71,16 +75,18 @@ public class GameController {
     }
 
     private void makeAttackTurn() {
-        Player defender = game.players.get(indexOfPlayerToDefend);
+        Player defender = game.getPlayer(indexOfPlayerToDefend);
         isAllPass = true;
         if (!canAddAnyCardToBeat(defender)) return;
 
-        Player attacker = game.players.get(indexOfPlayerToDefend - 1);
+        Player attacker = game.getPlayer
+                (indexOfPlayerToDefend - 1);
 
         for (int i = 2; attacker != defender; i++) {
             // Is winner already
             if (attacker.countCardsOnHand() == 0) {
-                attacker = game.players.get(indexOfPlayerToDefend - i);
+                attacker = game.getPlayer
+                        (indexOfPlayerToDefend - i);
                 continue;
             }
 
@@ -103,7 +109,7 @@ public class GameController {
                 if (turnRecord.turn() == TurnRecord.Turn.ADDING) {
                     Card cardToBeat = attacker.takeCardAt(turnRecord.cardToBeatIndex());
 
-                    if (!game.gameDesk.addCardToBeat(cardToBeat)) {
+                    if (!gameDesk.addCardToBeat(cardToBeat)) {
                         attacker.addCard(cardToBeat); // put back
                     }
                 }
@@ -111,19 +117,21 @@ public class GameController {
 
                 if (turnRecord.turn() != TurnRecord.Turn.PASS) turnRecord = TurnRecord.WRONG_TURN_RECORD;
             }
-            attacker = game.players.get(indexOfPlayerToDefend - i);
+            attacker = game.getPlayer
+                    (indexOfPlayerToDefend - i);
         }
     }
 
 
     public void fillCardsToPlayersFromCardDeck() {
-        if (game.gameDesk.cardDeck.isEmpty()) return;
+        if (cardDeck.isEmpty()) return;
 
         Player player;
-        for (int i = 1; i <= game.players.size(); i++) {
-            player = game.players.get(indexOfPlayerToDefend - i);
-            while (!game.gameDesk.cardDeck.isEmpty() && player.needCard()) {
-                player.addCard(game.gameDesk.cardDeck.takeTopCard());
+        for (int i = 1; i <= Game.PLAYER_COUNT; i++) {
+            player = game.getPlayer
+                    (indexOfPlayerToDefend - i);
+            while (!cardDeck.isEmpty() && player.needCard()) {
+                player.addCard(cardDeck.takeTopCard());
             }
         }
 
@@ -133,10 +141,11 @@ public class GameController {
         defenderDoTakePass = false;
         isAllPass = false;
 
-        Player defender = game.players.get(indexOfPlayerToDefend);
+        Player defender = game.getPlayer
+                (indexOfPlayerToDefend);
         while (defender.countCardsOnHand() == 0) {
-            game.players.remove(indexOfPlayerToDefend);
-            defender = game.players.get(indexOfPlayerToDefend);
+            indexOfPlayerToDefend++;
+            defender = game.getPlayer(indexOfPlayerToDefend);
         }
 
         while (!isEndOfRound()) {
@@ -144,29 +153,31 @@ public class GameController {
             makeDefendTurn();
         }
         // clear desk
-        game.gameDesk.clearDesk();
+        gameDesk.clearDesk();
         // next player
         if (defenderDoTakePass) indexOfPlayerToDefend++; // skip defender
-        indexOfPlayerToDefend = (indexOfPlayerToDefend + 1) % game.players.size();
+        indexOfPlayerToDefend = (indexOfPlayerToDefend + 1) % Game.PLAYER_COUNT;
         fillCardsToPlayersFromCardDeck();
-        System.out.println("В колоде осталось: " + game.gameDesk.cardDeck.size());
+        System.out.println("В колоде осталось: " + cardDeck.size());
 
 
     }
 
     public boolean isEndOfGame() {
         int realPlayerCount = 0;
-        for (Player player : game.players) {
+        Player player;
+        for (int i = 0; i < Game.PLAYER_COUNT; i++) {
+            player = game.getPlayer(i);
             if (player.countCardsOnHand() != 0) realPlayerCount++;
         }
         return realPlayerCount <= 1;
     }
 
     public boolean isEndOfRound() {
-        return game.gameDesk.allBeaten() && isAllPass || defenderDoTakePass;
+        return gameDesk.allBeaten() && isAllPass || defenderDoTakePass;
     }
 
     public boolean canAddAnyCardToBeat(Player defender) {
-        return game.gameDesk.size() < Math.min(GameDesk.MAX_CARDS_ON_DESK, defender.countCardsOnHand());
+        return gameDesk.size() < Math.min(GameDesk.MAX_CARDS_ON_DESK, defender.countCardsOnHand());
     }
 }

@@ -11,7 +11,7 @@ public record TurnRecord(Turn turn, Player player, int cardToBeatIndex, int card
     public String toString() {
         return "TurnRecord{" +
                 "turn=" + turn +
-                ", player=" + player.name +
+                ", player=" + player.getName() +
                 ", cardToBeatIndex=" + cardToBeatIndex +
                 ", cardThatBeatIndex=" + cardThatBeatIndex +
                 '}';
