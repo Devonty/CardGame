@@ -1,8 +1,12 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 
+import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.PrintUtils;
+
+import java.util.List;
 import java.util.Objects;
 
-public class Card {
+public class Card implements GameObject {
     public static final int HEIGHT = 4;
     public static final String[] cardSuits = new String[]{"♣","♠", "♥", "♦" };
 
@@ -71,5 +75,15 @@ public class Card {
 
     public String[] getStringImageLines() {
         return stringImageLines;
+    }
+
+    @Override
+    public void restart(){
+        // Nothing to do
+    }
+
+    @Override
+    public void print() {
+        PrintUtils.printCardsInLine(List.of(this));
     }
 }
