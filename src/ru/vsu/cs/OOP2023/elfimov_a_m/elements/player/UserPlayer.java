@@ -1,10 +1,8 @@
-package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
+package ru.vsu.cs.OOP2023.elfimov_a_m.elements.player;
 
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameDesk;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.ConsoleToPlayer;
-import ru.vsu.cs.OOP2023.elfimov_a_m.utils.PrintUtils;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.TurnRecord;
-
-import java.util.*;
 
 public class UserPlayer extends AbstractPlayer {
     public UserPlayer(String name) {
