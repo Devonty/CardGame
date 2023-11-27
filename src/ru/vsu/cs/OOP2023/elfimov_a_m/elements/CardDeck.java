@@ -2,12 +2,11 @@ package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 
 import java.util.*;
 
-public class CardDeck {
+public class CardDeck implements GameObject{
 
     public final boolean isSize36;
 
     public final LinkedList<Card> cards;
-    public final String[] values;
 
     private String trumpSuit;
 
@@ -19,15 +18,24 @@ public class CardDeck {
     public CardDeck(boolean isSize36) {
         this.isSize36 = isSize36;
         this.cards = new LinkedList<>();
-        this.values = isSize36 ? Card.cardValues36 : Card.cardValues52;
 
         restart();
     }
 
+    @Override
     public void restart() {
+        this.cards.clear();
+
         chooseTrump();
         generateCards();
         shuffleCards();
+    }
+
+    @Override
+    public void print() {
+        System.out.println("Колода:");
+        Card deck = new Card(trumpSuit, Integer.toString(size()));
+        deck.print();
     }
 
     public Card takeTopCard() {
@@ -48,6 +56,7 @@ public class CardDeck {
 
     private void generateCards() {
         // init cards
+        String[] values = isSize36 ? Card.cardValues36 : Card.cardValues52;
         for (String suit : Card.cardSuits) {
             for (String value : values) {
                 Card card = new Card(suit, value, suit.equals(trumpSuit));
