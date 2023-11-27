@@ -1,5 +1,6 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 
+import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 
 import java.util.*;
@@ -7,7 +8,7 @@ import java.util.*;
 import static ru.vsu.cs.OOP2023.elfimov_a_m.utils.PrintUtils.printCardsInLine;
 import static ru.vsu.cs.OOP2023.elfimov_a_m.utils.PrintUtils.printNumeric;
 
-public class GameDesk {
+public class GameDesk implements GameObject {
     public static final Card cardNull = new Card("  ", "  ");
     public static final int MAX_CARDS_ON_DESK = 6;
     private final List<Card> cardsToBeat;
@@ -103,6 +104,11 @@ public class GameDesk {
         cardsToBeat.clear();
     }
 
+    @Override
+    public void restart() {
+        clearDesk();
+    }
+    @Override
     public void print() {
         printCardsInLine(cardsToBeat);
         printCardsInLine(cardsThatBeat);
