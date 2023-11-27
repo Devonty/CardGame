@@ -1,10 +1,12 @@
-package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
+package ru.vsu.cs.OOP2023.elfimov_a_m;
 
-import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.CardDeck;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameDesk;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.TurnRecord;
 
-public class GameController {
+public class GameController{
     private final Game game;
     private final GameDesk gameDesk;
     private final CardDeck cardDeck;
@@ -172,4 +174,5 @@ public class GameController {
     public boolean canAddAnyCardToBeat(Player defender) {
         return gameDesk.size() < Math.min(GameDesk.MAX_CARDS_ON_DESK, defender.countCardsOnHand());
     }
+
 }
