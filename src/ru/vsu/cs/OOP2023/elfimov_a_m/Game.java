@@ -5,9 +5,12 @@ import ru.vsu.cs.OOP2023.elfimov_a_m.utils.CycleList;
 
 public class Game {
     public static final int PLAYER_COUNT = 3;
-    protected CycleList<Player> players;
-    protected GameDesk gameDesk;
-    protected GameController gameController;
+    public static final boolean isSize36 = true;
+    private final CycleList<Player> players;
+    private final GameDesk gameDesk;
+    private final CardDeck cardDeck;
+    private final GameController gameController;
+
 
 
     public Game() {
@@ -18,7 +21,9 @@ public class Game {
         }
 
         gameDesk = new GameDesk();
-        gameController = new GameController(this);
+        cardDeck = new CardDeck(isSize36);
+
+        gameController = new GameController(this, gameDesk, cardDeck);
     }
 
     public void printForPlayer(Player player){
@@ -26,7 +31,7 @@ public class Game {
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));
         gameDesk.print();
-        System.out.println("Ход игрока: "  + player.name);
+        System.out.println("Ход игрока: "  + player.getName());
         player.printCardOnHand();
     }
     public Player start(){
@@ -39,13 +44,13 @@ public class Game {
     private Player getLoser(){
         for (Player player : players) {
             if (player.countCardsOnHand() != 0) {
-                System.out.println(player.name + " Проиграл");
+                System.out.println(player.getName() + " Проиграл");
                 return player;
             }
         }
         return null; // draw
     }
-    public final GameDesk getGameDesk() {
-        return gameDesk;
+    public Player getPlayer(int index){
+        return players.get(index);
     }
 }

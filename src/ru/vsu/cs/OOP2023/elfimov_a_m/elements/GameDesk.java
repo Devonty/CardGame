@@ -10,10 +10,8 @@ public class GameDesk {
     public static final int MAX_CARDS_ON_DESK = 6;
     private final List<Card> cardsToBeat;
     private final List<Card> cardsThatBeat;
-    public final CardDeck cardDeck;
 
     public GameDesk(boolean isSize36) {
-        cardDeck = new CardDeck(isSize36);
         cardsToBeat = new ArrayList<>(MAX_CARDS_ON_DESK);
         cardsThatBeat = new ArrayList<>(MAX_CARDS_ON_DESK);
     }
@@ -48,25 +46,21 @@ public class GameDesk {
     }
 
     public boolean canCardBeatAnotherAt(int indexCardToBeat, Card cardThatBeat) {
-        return  canCardBeatAnother(cardsToBeat.get(indexCardToBeat), cardThatBeat);
+        return canCardBeatAnother(cardsToBeat.get(indexCardToBeat), cardThatBeat);
     }
+
     public boolean canCardBeatAnother(Card cardToBeat, Card cardThatBeat) {
         if (cardThatBeat.isTrump() && !cardToBeat.isTrump()) return true;
         if (!cardThatBeat.isTrump() && cardToBeat.isTrump()) return false;
         if (!cardThatBeat.getSuit().equals(cardToBeat.getSuit())) return false;
         // (both are trump || both aren't trump ) with same suit
-        return indexOfValue(cardThatBeat.getValue()) > indexOfValue(cardToBeat.getValue());
+        return Card.getValueIndex(cardThatBeat.getValue()) > Card.getValueIndex(cardToBeat.getValue());
     }
 
-    public boolean isCardBeatenAt(int index){
+    public boolean isCardBeatenAt(int index) {
         return cardsThatBeat.get(index) != cardNull;
     }
-    private int indexOfValue(String value) {
-        for (int i = 0; i < cardDeck.values.length; i++) {
-            if (cardDeck.values[i].equals(value)) return i;
-        }
-        return -1;
-    }
+
 
     public boolean addCardToBeat(Card cardToAdd) {
         if (!isPossibleToAddCard(cardToAdd)) return false;
@@ -91,7 +85,7 @@ public class GameDesk {
         return false;
     }
 
-    public void giveAllDeskCardToPlayer(Player defender) {
+    public void giveAllDeskCardsToPlayer(Player defender) {
         // if defender take pass
         for (Card card : cardsToBeat) {
             defender.addCard(card);
@@ -102,10 +96,11 @@ public class GameDesk {
         clearDesk();
     }
 
-    public void clearDesk(){
+    public void clearDesk() {
         cardsThatBeat.clear();
         cardsToBeat.clear();
     }
+
     public void print() {
         printCardsInLine(cardsToBeat);
         printCardsInLine(cardsThatBeat);
