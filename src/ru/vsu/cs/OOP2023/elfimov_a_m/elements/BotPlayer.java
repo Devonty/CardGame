@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class BotPlayer extends Player {
-    public int index = 0;
+
 
     public BotPlayer(String name) {
         super(name);

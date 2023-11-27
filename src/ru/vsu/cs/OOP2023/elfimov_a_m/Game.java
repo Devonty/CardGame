@@ -12,6 +12,7 @@ public class Game {
 
     public Game() {
         players = new CycleList<>(PLAYER_COUNT);
+        // players.add(new Player("Придумай мне имя"));
         for (int i = 0; i < PLAYER_COUNT; i++) {
             players.add(new BotPlayer("Player_"+i));
         }

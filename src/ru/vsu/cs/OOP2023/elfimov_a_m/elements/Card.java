@@ -3,7 +3,7 @@ package ru.vsu.cs.OOP2023.elfimov_a_m.elements;
 import java.util.Objects;
 
 public class Card {
-    public static final int HEIGHT = 4, WIDTH = 5;
+    public static final int HEIGHT = 4;
     public static final String[] cardSuits = new String[]{"♣","♠", "♥", "♦" };
 
     public static final String[] cardValues36 = new String[]{" 6", " 7"," 8"," 9","10"," J"," Q"," K"," A"};

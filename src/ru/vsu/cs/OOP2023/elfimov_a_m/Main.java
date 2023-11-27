@@ -67,8 +67,10 @@ public class Main {
     }
     public static void main(String[] args) {
         int game_to_play = 1000;
+
         Map<String, Integer> map = new HashMap<>();
         Player draw =  new Player("Draw");
+
         while (game_to_play-- != 0) {
             Game game = new Game();
             Player loser = game.start();
