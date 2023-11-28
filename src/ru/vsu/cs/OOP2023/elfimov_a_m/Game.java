@@ -26,21 +26,29 @@ public class Game {
         cardDeck = new CardDeck(isSize36);
 
         gameController = new GameController(this, gameDesk, cardDeck);
-    }
+
+        }
 
     public void printForPlayer(Player player){
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));
         System.out.println("=".repeat(80));
+        cardDeck.print();
         gameDesk.print();
-        System.out.println("Ход игрока: "  + player.getName());
-        player.printCardOnHand();
+        player.print();
     }
     public Player start(){
         // returns loser
         while(!gameController.isEndOfGame()) gameController.playRound();
         System.out.println("Игра окончена!");
         return getLoser();
+    }
+
+    public void restart(){
+        cardDeck.restart();
+        gameDesk.restart();
+        for(Player player : players) player.restart();
+        gameController.fillCardsToPlayersFromCardDeck();
     }
 
     private Player getLoser(){

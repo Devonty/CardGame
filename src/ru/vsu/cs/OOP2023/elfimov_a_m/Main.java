@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 public class Main {
-    public static void testGameDesk(){
+    public static void testGameDesk() {
         GameDesk gameDesk = new GameDesk();
 
         gameDesk.addCardToBeat(new Card(Card.cardSuits[0], " 6"));
@@ -32,20 +32,20 @@ public class Main {
 
     }
 
-    public static void testPlayer(){
+    public static void testPlayer() {
         Player player = new BotPlayer("Player_test");
         CardDeck cardDeck = new CardDeck();
 
         System.out.println("TrumpSuit is " + cardDeck.getTrumpSuit());
 
-        while(!cardDeck.isEmpty() && player.needCard()){
+        while (!cardDeck.isEmpty() && player.needCard()) {
             player.addCard(cardDeck.takeTopCard());
         }
 
         player.printCardOnHand();
     }
 
-    public static void botSortTest(){
+    public static void botSortTest() {
         CardDeck cardDeck = new CardDeck();
         cardDeck.cards.sort(new Comparator<Card>() {
             @Override
@@ -56,7 +56,7 @@ public class Main {
                 return Arrays.compare(s1, s2);
             }
 
-            private int[] cardToStringForCompare(Card card){
+            private int[] cardToStringForCompare(Card card) {
                 return new int[]{
                         card.isTrump() ? 1 : 0,
                         Card.getValueIndex(card.getValue()),
@@ -67,15 +67,18 @@ public class Main {
         });
         PrintUtils.printCardDeck(cardDeck, 9, 6);
     }
+
     public static void main(String[] args) {
         int game_to_play = 100;
+        Game game = new Game();
 
         Map<String, Integer> map = new HashMap<>();
-        Player draw =  new UserPlayer("Draw");
+        Player draw = new UserPlayer("Draw");
 
         while (game_to_play-- != 0) {
-            Game game = new Game();
+            game.restart();
             Player loser = game.start();
+
             if (loser == null) loser = draw;
             map.putIfAbsent(loser.getName(), 0);
             map.put(loser.getName(), map.get(loser.getName()) + 1);

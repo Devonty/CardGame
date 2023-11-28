@@ -110,6 +110,7 @@ public class GameDesk implements GameObject {
     }
     @Override
     public void print() {
+        System.out.println("Игровое поле:");
         printCardsInLine(cardsToBeat);
         printCardsInLine(cardsThatBeat);
         printNumeric(cardsToBeat.size());

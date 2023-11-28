@@ -34,7 +34,7 @@ public class CardDeck implements GameObject{
     @Override
     public void print() {
         System.out.println("Колода:");
-        Card deck = new Card(trumpSuit, Integer.toString(size()));
+        Card deck = new Card(trumpSuit, "%02d".formatted(size()), true);
         deck.print();
     }
 
