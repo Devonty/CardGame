@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractPlayer implements Player {
+public abstract class AbstractPlayer implements Player{
     public static final int MAX_CARD_ON_HAND = 6;
     protected final List<Card> cardsOnHand = new LinkedList<>();
     private final String name;
@@ -87,5 +87,16 @@ public abstract class AbstractPlayer implements Player {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void restart() {
+        cardsOnHand.clear();
+    }
+
+    @Override
+    public void print() {
+        System.out.println("Карты игрока: " + name);
+        PrintUtils.printCardsInLine(cardsOnHand);
     }
 }
