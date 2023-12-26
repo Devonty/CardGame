@@ -28,7 +28,7 @@ public class GameController{
         }
     }
 
-    private void askForAttackTurn(){
+    public void askForAttackTurn(){
         int defenderIndex = game.getDefenderIndex();
         int i = defenderIndex - 1;
         Player defender = game.getPlayer(defenderIndex);
@@ -56,7 +56,7 @@ public class GameController{
         }
     }
 
-    private void askForDefendTurn(){
+    public void askForDefendTurn(){
         Player defender = game.getPlayer(game.getDefenderIndex());
         Turn turn;
         // Просим сделать ход
@@ -73,36 +73,8 @@ public class GameController{
     }
 
     private boolean turnInterpreter(Turn turn){
-        System.out.println(turn.describe());
-        if(turn instanceof WrongTurn) return false;
-        if(turn instanceof PassTurn) return false;
-
-        if(turn instanceof TakePassTurn){
-            askForAttackTurn();
-            triggerToEndRound = true;
-            game.giveAllDeskCardToPlayer(turn.getPlayer());
-            game.nextPlayer();
-            return true;
-        }
-        if(turn instanceof AttackTurn){
-            Card card = turn.getPlayer().takeCardAt(turn.getCardIndexOnHand());
-            if(!game.addCardOnDesk(card)) {
-                // возвращаем, если не смогли положить
-                turn.getPlayer().addCard(card);
-                return false;
-            }
-            return true;
-        }
-        if(turn instanceof DefendTurn){
-            Player defender = turn.getPlayer();
-            Card card = defender.takeCardAt(turn.getCardIndexOnHand());
-
-            if(!game.addCardOnDesk(card, turn.position())) {
-                // возвращаем, если не смогли положить
-                defender.addCard(card);
-            }
-        }
-        return false;
+        if(turn == null) return false;
+        return turn.playInGame(game);
 
     }
 
@@ -115,4 +87,7 @@ public class GameController{
     }
 
 
+    public void endRound() {
+        triggerToEndRound = true;
+    }
 }
