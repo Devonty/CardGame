@@ -50,6 +50,16 @@ public class GameProxy implements GameStatus{
     }
 
     @Override
+    public String getDefenderName() {
+        return game.getDefenderName();
+    }
+
+    @Override
+    public String getPlayerNameByIndex(int index) {
+        return game.getPlayerNameByIndex(index);
+    }
+
+    @Override
     public int getPlayerCardCount(int playerIndex) {
         return game.getPlayerCardCount(playerIndex);
     }

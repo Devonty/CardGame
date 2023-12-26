@@ -5,16 +5,18 @@ import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) {
-        String[] types = new String[] {"SimpleBot", "SimpleBot"};
+        String[] types = new String[] {"SimpleBot", "SimpleBot"}; // Поменять на User, для ручной игры
         GameConfig gameConfig = new Fool36GameConfig(types);
 
         Map<String, Integer> statistic = new HashMap<>();
 
-        int n = 1000;
+        System.out.println("Введите число игр: ");
+        int n = new Scanner(System.in).nextInt();
         while(n-- > 0){
             Game game = new Game(gameConfig);
             String name = game.start();

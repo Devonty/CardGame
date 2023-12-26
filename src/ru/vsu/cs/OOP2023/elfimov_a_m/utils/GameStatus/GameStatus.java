@@ -14,6 +14,9 @@ public interface GameStatus {
     int getDeckSize();
     int getDefenderIndex();
 
+    String getDefenderName();
+    String getPlayerNameByIndex(int index);
+
     int getPlayerCardCount(int playerIndex);
 
     GameConfig getGameConfig();

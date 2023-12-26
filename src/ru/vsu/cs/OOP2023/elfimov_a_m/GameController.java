@@ -74,6 +74,7 @@ public class GameController{
 
     private boolean turnInterpreter(Turn turn){
         if(turn == null) return false;
+        System.out.println(turn.describe());
         return turn.playInGame(game);
 
     }

@@ -163,6 +163,16 @@ public class Game implements GameStatus {
     }
 
     @Override
+    public String getDefenderName() {
+        return getPlayerNameByIndex(defenderIndex);
+    }
+
+    @Override
+    public String getPlayerNameByIndex(int index) {
+        return players.get(index).getName();
+    }
+
+    @Override
     public int getPlayerCardCount(int playerIndex) {
         return players.get(playerIndex).countCardsOnHand();
     }
