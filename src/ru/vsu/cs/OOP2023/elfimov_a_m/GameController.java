@@ -1,178 +1,118 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.CardDeck;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.GameDesk;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
-import ru.vsu.cs.OOP2023.elfimov_a_m.utils.TurnRecord;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.FoolPrintUtils;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.turn.Turn;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.turn.fool.*;
 
 public class GameController{
     private final Game game;
-    private final GameDesk gameDesk;
-    private final CardDeck cardDeck;
-    private int indexOfPlayerToDefend = 0;
+    private final GameStatus gameStatus;
 
-    private boolean isAllPass = false;
-    private boolean defenderDoTakePass = false;
+    boolean triggerToEndRound = false;
+    boolean allPass = false;
 
-    public GameController(Game game, GameDesk gameDesk, CardDeck cardDeck) {
+    public GameController(Game game) {
         this.game = game;
-        this.gameDesk = gameDesk;
-        this.cardDeck = cardDeck;
-        fillCardsToPlayersFromCardDeck();
+        this.gameStatus = game.getGameStatus();
     }
 
-    private TurnRecord askForDefend(Player defender) {
-        game.printForPlayer(defender);
-        return defender.askForDefend(gameDesk);
-    }
-
-    private TurnRecord askForAttack(Player attacker) {
-        game.printForPlayer(attacker);
-        return attacker.askForAttack(gameDesk);
-    }
-
-    private void makeDefendTurn() {
-        defenderDoTakePass = false;
-        Player defender = game.getPlayer(indexOfPlayerToDefend);
-        TurnRecord turnRecord = TurnRecord.WRONG_TURN_RECORD;
-
-        // Make turn while not allBeaten
-        while (!gameDesk.allBeaten()) {
-            // for err turns
-            while (turnRecord == TurnRecord.WRONG_TURN_RECORD) {
-                turnRecord = askForDefend(defender);
-            }
-            // console turnRecord
-            System.out.println(turnRecord);
-            // Beats
-            if (turnRecord.turn() == TurnRecord.Turn.BEATS) {
-                int indexCardToBeat = turnRecord.cardToBeatIndex();
-                Card cardThatBeat = defender.takeCardAt(turnRecord.cardThatBeatIndex());
-
-                if (!gameDesk.beatCardAtBy(indexCardToBeat, cardThatBeat)) {
-                    defender.addCard(cardThatBeat); // put back
-                }
-            }
-
-            // Take Pass
-            if (turnRecord.turn() == TurnRecord.Turn.TAKE_PASS) {
-                defenderDoTakePass = true;
-                System.out.println("Игрок тянет карты! Можете добавить карты на стол!" + "<- ".repeat(10));
-                makeAttackTurn();
-                gameDesk.giveAllDeskCardsToPlayer(defender);
-                return;
-            }
-            turnRecord = TurnRecord.WRONG_TURN_RECORD;
+    public void playRound(){
+        allPass = false;
+        triggerToEndRound = false;
+        while(!isEndOfRound()){
+            askForAttackTurn();
+            askForDefendTurn();
         }
     }
 
-    private void makeAttackTurn() {
-        Player defender = game.getPlayer(indexOfPlayerToDefend);
-        isAllPass = true;
-        if (!canAddAnyCardToBeat(defender)) return;
+    private void askForAttackTurn(){
+        int defenderIndex = game.getDefenderIndex();
+        int i = defenderIndex - 1;
+        Player defender = game.getPlayer(defenderIndex);
+        Player attacker = game.getPlayer(i);
 
-        Player attacker = game.getPlayer
-                (indexOfPlayerToDefend - 1);
+        allPass = true;
 
-        for (int i = 2; attacker != defender; i++) {
-            // Is winner already
-            if (attacker.countCardsOnHand() == 0) {
-                attacker = game.getPlayer
-                        (indexOfPlayerToDefend - i);
-                continue;
+        // Для всех аттакующих
+        while(attacker != defender){
+            // Пропуская вышедших из игры
+            while(attacker.getStatus() != Player.playerStatus.PLAYING) attacker = game.getPlayer(--i);
+            if(attacker == defender) break;
+            // Просим сделать ход
+            Turn turn = new WrongTurn();
+            // Пока не сделает PASS
+            while(!turn.didPass()){
+                FoolPrintUtils.printGameStatus(gameStatus);
+                FoolPrintUtils.printCardsOnHand(gameStatus, attacker);
+
+                turn = attacker.askForAttack(gameStatus);
+                // Разыгрываем ход
+                allPass = !turnInterpreter(turn) && allPass;
             }
-
-            TurnRecord turnRecord = TurnRecord.WRONG_TURN_RECORD;
-            // Make turn while not PASS
-            while (turnRecord.turn() != TurnRecord.Turn.PASS) {
-                if (!canAddAnyCardToBeat(defender)) return;
-                // for err turns
-                while (turnRecord == TurnRecord.WRONG_TURN_RECORD) {
-                    turnRecord = askForAttack(attacker);
-                }
-
-                // console turnRecord
-                System.out.println(turnRecord);
-
-                // All Pass check
-                isAllPass = isAllPass && (turnRecord.turn() == TurnRecord.Turn.PASS);
-
-                // Adding
-                if (turnRecord.turn() == TurnRecord.Turn.ADDING) {
-                    Card cardToBeat = attacker.takeCardAt(turnRecord.cardToBeatIndex());
-
-                    if (!gameDesk.addCardToBeat(cardToBeat)) {
-                        attacker.addCard(cardToBeat); // put back
-                    }
-                }
-
-
-                if (turnRecord.turn() != TurnRecord.Turn.PASS) turnRecord = TurnRecord.WRONG_TURN_RECORD;
-            }
-            attacker = game.getPlayer
-                    (indexOfPlayerToDefend - i);
+            attacker = game.getPlayer(--i);
         }
     }
 
+    private void askForDefendTurn(){
+        Player defender = game.getPlayer(game.getDefenderIndex());
+        Turn turn;
+        // Просим сделать ход
+        // Пока не отобъет все
+        while(!game.isAllBeaten()){
+            FoolPrintUtils.printGameStatus(gameStatus);
+            FoolPrintUtils.printCardsOnHand(gameStatus, defender);
 
-    public void fillCardsToPlayersFromCardDeck() {
-        if (cardDeck.isEmpty()) return;
-
-        Player player;
-        for (int i = 1; i <= Game.PLAYER_COUNT; i++) {
-            player = game.getPlayer
-                    (indexOfPlayerToDefend - i);
-            while (!cardDeck.isEmpty() && player.needCard()) {
-                player.addCard(cardDeck.takeTopCard());
-            }
+            turn = defender.askForDefend(gameStatus);
+            // Разыгрываем ход
+            turnInterpreter(turn);
         }
 
     }
 
-    public void playRound() {
-        defenderDoTakePass = false;
-        isAllPass = false;
+    private boolean turnInterpreter(Turn turn){
+        System.out.println(turn.describe());
+        if(turn instanceof WrongTurn) return false;
+        if(turn instanceof PassTurn) return false;
 
-        Player defender = game.getPlayer
-                (indexOfPlayerToDefend);
-        while (defender.countCardsOnHand() == 0) {
-            indexOfPlayerToDefend++;
-            defender = game.getPlayer(indexOfPlayerToDefend);
+        if(turn instanceof TakePassTurn){
+            askForAttackTurn();
+            triggerToEndRound = true;
+            game.giveAllDeskCardToPlayer(turn.getPlayer());
+            game.nextPlayer();
+            return true;
         }
-
-        while (!isEndOfRound()) {
-            makeAttackTurn();
-            makeDefendTurn();
+        if(turn instanceof AttackTurn){
+            Card card = turn.getPlayer().takeCardAt(turn.getCardIndexOnHand());
+            if(!game.addCardOnDesk(card)) {
+                // возвращаем, если не смогли положить
+                turn.getPlayer().addCard(card);
+                return false;
+            }
+            return true;
         }
-        // clear desk
-        gameDesk.clearDesk();
-        // next player
-        if (defenderDoTakePass) indexOfPlayerToDefend++; // skip defender if he did TakePass
-        indexOfPlayerToDefend = (indexOfPlayerToDefend + 1) % Game.PLAYER_COUNT; // normalize;
-        fillCardsToPlayersFromCardDeck();
+        if(turn instanceof DefendTurn){
+            Player defender = turn.getPlayer();
+            Card card = defender.takeCardAt(turn.getCardIndexOnHand());
 
-        System.out.println("В колоде осталось: " + cardDeck.size());
-
-
-    }
-
-    public boolean isEndOfGame() {
-        int realPlayerCount = 0;
-        Player player;
-        for (int i = 0; i < Game.PLAYER_COUNT; i++) {
-            player = game.getPlayer(i);
-            if (player.countCardsOnHand() != 0) realPlayerCount++;
+            if(!game.addCardOnDesk(card, turn.position())) {
+                // возвращаем, если не смогли положить
+                defender.addCard(card);
+            }
         }
-        return realPlayerCount <= 1;
+        return false;
+
     }
 
-    public boolean isEndOfRound() {
-        return gameDesk.allBeaten() && isAllPass || defenderDoTakePass;
+    private boolean isEndOfRound() {
+        if(allPass && gameStatus.isAllBeaten()) return true;
+        if(triggerToEndRound) return true;
+        if(game.getPlayer(gameStatus.getDefenderIndex()).countCardsOnHand() == 0) return true;
+
+        return false;
     }
 
-    public boolean canAddAnyCardToBeat(Player defender) {
-        return gameDesk.size() < Math.min(GameDesk.MAX_CARDS_ON_DESK, defender.countCardsOnHand());
-    }
 
 }

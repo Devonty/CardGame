@@ -1,66 +1,195 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m;
 
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.*;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.BotPlayer;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.cardContainer.CardContainer;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.cardDeck.CardDeck;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.gameDesk.GameDesk;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
-import ru.vsu.cs.OOP2023.elfimov_a_m.utils.CycleList;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.PlayerList;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameProxy;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
 
-public class Game {
-    public static final int PLAYER_COUNT = 3;
-    public static final boolean isSize36 = true;
-    private final CycleList<Player> players;
+import java.util.Set;
+
+public class Game implements GameStatus {
+    private final PlayerList<Player> players;
+    private final GameController gameController;
+    private final GameConfig gameConfig;
     private final GameDesk gameDesk;
     private final CardDeck cardDeck;
-    private final GameController gameController;
 
+    private final GameStatus gameStatus;
 
+    private int trumpSuitIndex;
+    private int defenderIndex = 0;
 
-    public Game() {
-        players = new CycleList<>(PLAYER_COUNT);
-        // players.add(new Player("Придумай мне имя"));
-        for (int i = 0; i < PLAYER_COUNT; i++) {
-            players.add(new BotPlayer("Player_"+i));
+    public Game(GameConfig gameConfig) {
+        this.gameConfig = gameConfig;
+        this.players = gameConfig.getPlayers();
+        this.gameDesk = gameConfig.getGameDesk();
+        this.cardDeck = gameConfig.getCardDeck();
+        this.trumpSuitIndex = gameConfig.trumpSuitIndex();
+
+        this.gameStatus = new GameProxy(this);
+        this.gameController = new GameController(this);
+    }
+
+    public boolean addCardOnDesk(Card card) {
+        if (!gameConfig.gameRules().canAddCardOnDesk(gameStatus, card)) return false;
+        gameDesk.addCard(card);
+        return true;
+    }
+
+    public boolean addCardOnDesk(Card card, int position) {
+        if (!gameConfig.gameRules().canAddCardInContainer(gameStatus.getCardContainerAt(position), card)) return false;
+        return gameDesk.addCard(card, position);
+    }
+
+    public void giveAllDeskCardToPlayer(Player defender) {
+        for (int i = 0; i < gameDesk.size(); i++) {
+            for (Card card : gameDesk.get(i).getAllCards())
+                defender.addCard(card);
         }
-
-        gameDesk = new GameDesk();
-        cardDeck = new CardDeck(isSize36);
-
-        gameController = new GameController(this, gameDesk, cardDeck);
-
-        }
-
-    public void printForPlayer(Player player){
-        System.out.println("=".repeat(80));
-        System.out.println("=".repeat(80));
-        System.out.println("=".repeat(80));
-        cardDeck.print();
-        gameDesk.print();
-        player.print();
-    }
-    public Player start(){
-        // returns loser
-        while(!gameController.isEndOfGame()) gameController.playRound();
-        System.out.println("Игра окончена!");
-        return getLoser();
+        gameDesk.clear();
     }
 
-    public void restart(){
-        cardDeck.restart();
-        gameDesk.restart();
-        for(Player player : players) player.restart();
-        gameController.fillCardsToPlayersFromCardDeck();
-    }
-
-    private Player getLoser(){
+    public void giveCardsToPlayersFromDeck() {
         for (Player player : players) {
-            if (player.countCardsOnHand() != 0) {
-                System.out.println(player.getName() + " Проиграл");
-                return player;
+            while (!cardDeck.isEmpty() && player.needCard()) {
+                player.addCard(cardDeck.takeTopCard());
             }
         }
-        return null; // draw
     }
-    public Player getPlayer(int index){
+
+    public Player getPlayer(int index) {
         return players.get(index);
     }
+
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public String start() {
+        // начальная раздача карт
+        giveCardsToPlayersFromDeck();
+        while (!isEndOfGame()) {
+            // Отыграть раунд
+            gameController.playRound();
+            // Подготовиться к следующему раунду
+            giveCardsToPlayersFromDeck();
+            checkPlayerStatuses();
+            gameDesk.clear();
+            nextPlayer();
+        }
+        checkPlayerStatuses();
+
+        Player loser = getLoser();
+        if (loser == null) {
+            System.out.println("Ничья!");
+            return "Draw";
+        }
+        System.out.println("Игрок " + loser.getName() + " проиграл!");
+        return loser.getName();
+
+    }
+
+    public void nextPlayer() {
+        int i = 1;
+        Player defender = getPlayer(defenderIndex + i);
+        while (i < players.size() && defender.getStatus() != Player.playerStatus.PLAYING)
+            defender = getPlayer((++i) + defenderIndex);
+        defenderIndex = (i + defenderIndex) % players.size();
+    }
+
+    private boolean isEndOfGame() {
+        return currentPlayerCount() <= 1 && getDeckSize() == 0;
+    }
+
+    public void checkPlayerStatuses() {
+        if (!isDeckEmpty()) return;
+
+        for (Player player : players) {
+            if (player.countCardsOnHand() == 0) player.setStatus(Player.playerStatus.WON);
+            else if (isEndOfGame()) player.setStatus(Player.playerStatus.LOSE);
+
+        }
+    }
+
+    public Player getLoser() {
+        for (Player player : players) {
+            if (player.getStatus() == Player.playerStatus.LOSE)
+                return player;
+        }
+        return null;
+    }
+
+    @Override
+    public CardContainer getCardContainerAt(int index) {
+        return gameDesk.get(index);
+    }
+
+    @Override
+    public int getTrumpSuitIndex() {
+        return trumpSuitIndex;
+    }
+
+    @Override
+    public int getContainerCount() {
+        return gameDesk.size();
+    }
+
+    @Override
+    public int getNotBeatenCount() {
+        return gameDesk.getNotBeatenCount();
+    }
+
+    @Override
+    public int currentPlayerCount() {
+        int k = 0;
+        for (Player player : players) k += player.getStatus() == Player.playerStatus.PLAYING ? 1 : 0;
+        return k;
+    }
+
+    @Override
+    public int getDeckSize() {
+        return cardDeck.size();
+    }
+
+    @Override
+    public int getDefenderIndex() {
+        return defenderIndex;
+    }
+
+    @Override
+    public int getPlayerCardCount(int playerIndex) {
+        return players.get(playerIndex).countCardsOnHand();
+    }
+
+    @Override
+    public GameConfig getGameConfig() {
+        return gameConfig;
+    }
+
+    @Override
+    public boolean allAttackerPass() {
+        return false;
+    }
+
+    @Override
+    public int getDeskSpotCount() {
+        return 0;
+    }
+
+    @Override
+    public Set<Integer> getValueIndexesOnDesk() {
+        return gameDesk.getValueIndexesOnDesk();
+    }
+
+    @Override
+    public Set<Integer> getSuitIndexesOnDesk() {
+        return gameDesk.getValueIndexesOnDesk();
+    }
+
 }
