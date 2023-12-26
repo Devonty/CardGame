@@ -192,4 +192,7 @@ public class Game implements GameStatus {
         return gameDesk.getValueIndexesOnDesk();
     }
 
+    public GameController getController() {
+        return gameController;
+    }
 }
