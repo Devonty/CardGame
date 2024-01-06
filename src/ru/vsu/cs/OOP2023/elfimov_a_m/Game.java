@@ -5,6 +5,10 @@ import ru.vsu.cs.OOP2023.elfimov_a_m.elements.cardContainer.CardContainer;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.cardDeck.CardDeck;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.gameDesk.GameDesk;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.PlayerFactory;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.fool.FoolPlayerFactory;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.strategy.Strategy;
+import ru.vsu.cs.OOP2023.elfimov_a_m.elements.strategy.StrategyFactoryManager;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.PlayerList;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameProxy;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
@@ -20,21 +24,36 @@ public class Game implements GameStatus {
     private final CardDeck cardDeck;
 
     private final GameStatus gameStatus;
+    private final StrategyFactoryManager strategyFactoryManager;
+    private final PlayerFactory playerFactory;
 
     private int trumpSuitIndex;
     private int defenderIndex = 0;
 
-    public Game(GameConfig gameConfig) {
+    public Game(GameConfig gameConfig, StrategyFactoryManager strategyFactoryManager) {
         this.gameConfig = gameConfig;
-        this.players = gameConfig.getPlayers();
         this.gameDesk = gameConfig.getGameDesk();
         this.cardDeck = gameConfig.getCardDeck();
-        this.trumpSuitIndex = gameConfig.trumpSuitIndex();
+        this.trumpSuitIndex = gameConfig.generateTrumpSuitIndex();
+        this.players = new PlayerList<>();
+
+        this.playerFactory = new FoolPlayerFactory(gameConfig);
+
+        this.strategyFactoryManager = strategyFactoryManager;
 
         this.gameStatus = new GameProxy(this);
         this.gameController = new GameController(this);
     }
 
+    public boolean addPlayer(String strategyName, String playerName){
+        Strategy strategy = strategyFactoryManager.getStrategy(strategyName);
+        if (strategy == null) return false;
+        players.add(playerFactory.getPlayer(strategy, playerName));
+        return true;
+    }
+    public boolean addPlayer(String strategyName){
+        return addPlayer(strategyName, "nameless");
+    }
     public boolean addCardOnDesk(Card card) {
         if (!gameConfig.gameRules().canAddCardOnDesk(gameStatus, card)) return false;
         gameDesk.addCard(card);
@@ -150,6 +169,11 @@ public class Game implements GameStatus {
         int k = 0;
         for (Player player : players) k += player.getStatus() == Player.playerStatus.PLAYING ? 1 : 0;
         return k;
+    }
+
+    @Override
+    public int initialPlayerCount() {
+        return players.size();
     }
 
     @Override

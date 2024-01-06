@@ -12,7 +12,9 @@ public interface Strategy {
     Turn askForAttack(GameStatus gameStatus);
     Turn askForDefend(GameStatus gameStatus);
 
-    void sortCardsOnHand(List<Card> cards);
+    void sortCardsOnHand();
 
     void setPlayer(Player player);
+
+    String getName();
 }

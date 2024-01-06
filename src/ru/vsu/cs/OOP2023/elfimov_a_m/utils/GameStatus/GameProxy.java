@@ -40,6 +40,11 @@ public class GameProxy implements GameStatus{
     }
 
     @Override
+    public int initialPlayerCount() {
+        return game.initialPlayerCount();
+    }
+
+    @Override
     public int getDeckSize() {
         return game.getDeckSize();
     }

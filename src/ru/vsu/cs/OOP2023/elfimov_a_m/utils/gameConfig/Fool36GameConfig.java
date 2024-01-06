@@ -18,38 +18,42 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class Fool36GameConfig implements GameConfig {
+    /* min max кол-во игроков, а не их создание*/
 
-    private static final String[] suits = new String[]{"♣","♠", "♥", "♦" };
+    private static final String[] suits = new String[]{"♣","♠", "♥", "♦"};
     private static final String[] values =  new String[]{" 6"," 7"," 8"," 9","10"," J"," Q"," K"," A"};
-    public static final String[] TWO_BOTS_TYPES = new String[]{"SimpleBot", "SimpleBot"};
-    private final String[] playerTypes;
     private final int valueCount;
     private final int suitCount;
     private final int maxCardsOnDesk;
+    private final int maxPlayerCount;
+    private final int minPlayerCount;
     private final int maxCardsOnHand;
-    private final int trumpSuitIndex;
     private final GameRules gameRules;
-    private final PlayerFactory playerFactory;
     private final CardDeckFactory cardDeckFactory;
     private final GameDeskFactory gameDeskFactory;
 
-    public Fool36GameConfig(String[] playerTypes) {
-        this.playerTypes = playerTypes;
+    public Fool36GameConfig() {
         this.valueCount = 9;
         this.suitCount = 4;
         this.maxCardsOnDesk = 6;
         this.maxCardsOnHand = 6;
-        this.trumpSuitIndex = new Random().nextInt(this.suitCount);
+
+        this.minPlayerCount = 2;
+        this.maxPlayerCount = 6;
 
         this.gameRules = new FoolGameRules(this);
-        this.playerFactory = new FoolPlayerFactory(this);
         this.cardDeckFactory = new FoolCardDeckFactory(this);
         this.gameDeskFactory = new FoolGameDeskFactory(this);
     }
 
     @Override
-    public int playerCount() {
-        return playerTypes.length;
+    public int minPlayerCount() {
+        return minPlayerCount;
+    }
+
+    @Override
+    public int maxPlayerCount() {
+        return maxPlayerCount;
     }
 
     @Override
@@ -83,25 +87,13 @@ public class Fool36GameConfig implements GameConfig {
     }
 
     @Override
-    public int trumpSuitIndex() {
-        return trumpSuitIndex;
+    public int generateTrumpSuitIndex() {
+        return new Random().nextInt(this.suitCount);
     }
 
     @Override
     public GameRules gameRules() {
         return gameRules;
-    }
-
-    @Override
-    public PlayerList<Player> getPlayers() {
-        PlayerList<Player> players = new PlayerList<>();
-        int i = 1;
-        for(String type : playerTypes){
-            Player player = playerFactory.getPlayer(type);
-            player.setName(String.format("Player %s", i++));
-            players.add(player);
-        }
-        return players;
     }
 
     @Override

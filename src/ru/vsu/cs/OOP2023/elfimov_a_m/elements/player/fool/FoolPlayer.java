@@ -7,6 +7,8 @@ import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.turn.Turn;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +20,6 @@ public class FoolPlayer implements Player {
     private playerStatus status = playerStatus.PLAYING;
     private final Strategy strategy;
 
-    private Turn lastTurn = null; // Не пока делал ходов
 
 
     public FoolPlayer(GameConfig gameConfig, Strategy strategy, String name) {
@@ -43,14 +44,8 @@ public class FoolPlayer implements Player {
     }
 
     @Override
-    public Turn getLastTurn() {
-        return lastTurn;
-    }
-
-    @Override
     public void addCard(Card cardToAdd) {
         cardsOnHand.add(cardToAdd);
-        strategy.sortCardsOnHand(cardsOnHand);
     }
 
     @Override
@@ -82,6 +77,11 @@ public class FoolPlayer implements Player {
     @Override
     public int countCardsOnHand() {
         return cardsOnHand.size();
+    }
+
+    @Override
+    public void sortCardsOnHand(Comparator<Card> comparator) {
+        cardsOnHand.sort(comparator);
     }
 
     @Override

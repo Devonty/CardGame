@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class FoolCardContainerTest {
 
-    static final GameConfig gameConfig = new Fool36GameConfig(Fool36GameConfig.TWO_BOTS_TYPES);
+    static final GameConfig gameConfig = new Fool36GameConfig();
 
     @Test
     public void isEmpty() {

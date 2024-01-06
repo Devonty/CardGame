@@ -2,7 +2,6 @@ package ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameRules;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.cardContainer.CardContainer;
-import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
 
@@ -21,7 +20,7 @@ public class FoolGameRules implements GameRules {
         }
 
         public boolean isTrump(Card card) {
-            return card.getSuitIndex() == gameConfig.trumpSuitIndex();
+            return card.getSuitIndex() == gameConfig.generateTrumpSuitIndex();
         }
     };
 

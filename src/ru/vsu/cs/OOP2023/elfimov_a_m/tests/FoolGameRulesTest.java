@@ -10,12 +10,12 @@ import java.util.Comparator;
 import static org.junit.Assert.*;
 
 public class FoolGameRulesTest {
-    public static final GameConfig gameConfig = new Fool36GameConfig(new String[]{"user", "user"});
+    public static final GameConfig gameConfig = new Fool36GameConfig();
     public static final Comparator<Card> CARD_COMP = gameConfig.gameRules().getComparator();
 
     @Test
     public void canCardBeatAnother1() {
-        int trumpSuit = gameConfig.trumpSuitIndex();
+        int trumpSuit = gameConfig.generateTrumpSuitIndex();
         int notTrumpSuit = trumpSuit + 1;
         Card c1 = new Card(notTrumpSuit, 0);
         Card c2 = new Card(notTrumpSuit, 0);
@@ -24,7 +24,7 @@ public class FoolGameRulesTest {
 
     @Test
     public void canCardBeatAnother2() {
-        int trumpSuit = gameConfig.trumpSuitIndex();
+        int trumpSuit = gameConfig.generateTrumpSuitIndex();
         int notTrumpSuit = trumpSuit + 1;
         Card c1 = new Card(notTrumpSuit, 10);
         Card c2 = new Card(notTrumpSuit, 0);
@@ -33,7 +33,7 @@ public class FoolGameRulesTest {
 
     @Test
     public void canCardBeatAnother3() {
-        int trumpSuit = gameConfig.trumpSuitIndex();
+        int trumpSuit = gameConfig.generateTrumpSuitIndex();
         int notTrumpSuit1 = trumpSuit + 1;
         int notTrumpSuit2 = trumpSuit + 2;
         Card c1 = new Card(notTrumpSuit1, 10);
@@ -43,7 +43,7 @@ public class FoolGameRulesTest {
 
     @Test
     public void canCardBeatAnother4() {
-        int trumpSuit = gameConfig.trumpSuitIndex();
+        int trumpSuit = gameConfig.generateTrumpSuitIndex();
         int notTrumpSuit = trumpSuit + 1;
         Card c1 = new Card(notTrumpSuit, 10);
         Card c2 = new Card(trumpSuit, 0);
@@ -52,7 +52,7 @@ public class FoolGameRulesTest {
 
     @Test
     public void canCardBeatAnother5() {
-        int trumpSuit = gameConfig.trumpSuitIndex();
+        int trumpSuit = gameConfig.generateTrumpSuitIndex();
         int notTrumpSuit = trumpSuit + 1;
         Card c1 = new Card(trumpSuit, 10);
         Card c2 = new Card(trumpSuit, 0);
@@ -61,7 +61,7 @@ public class FoolGameRulesTest {
 
     @Test
     public void canCardBeatAnother6() {
-        int trumpSuit = gameConfig.trumpSuitIndex();
+        int trumpSuit = gameConfig.generateTrumpSuitIndex();
         int notTrumpSuit = trumpSuit + 1;
         Card c1 = new Card(trumpSuit, 0);
         Card c2 = new Card(trumpSuit, 10);
@@ -70,7 +70,7 @@ public class FoolGameRulesTest {
 
     @Test
     public void canCardBeatAnother7() {
-        int trumpSuit = gameConfig.trumpSuitIndex();
+        int trumpSuit = gameConfig.generateTrumpSuitIndex();
         int notTrumpSuit = trumpSuit + 1;
         Card c1 = new Card(trumpSuit, 0);
         Card c2 = new Card(notTrumpSuit, 10);

@@ -11,6 +11,7 @@ public interface GameStatus {
     int getContainerCount();
     int getNotBeatenCount();
     int currentPlayerCount();
+    int initialPlayerCount();
     int getDeckSize();
     int getDefenderIndex();
 

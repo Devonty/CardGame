@@ -1,12 +1,10 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.utils;
 
-import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +34,7 @@ public class FoolPrintUtils {
     }
     public static void printPlayersCardCount(GameStatus gameStatus){
         System.out.println("Карты игроков:");
-        for(int i = 0; i < gameStatus.getGameConfig().playerCount(); i++) {
+        for(int i = 0; i < gameStatus.initialPlayerCount(); i++) {
             System.out.println((i + 1) + ") \"" + gameStatus.getPlayerNameByIndex(i) + "\" : " + gameStatus.getPlayerCardCount(i) + " карт(ы)");
         }
     }
