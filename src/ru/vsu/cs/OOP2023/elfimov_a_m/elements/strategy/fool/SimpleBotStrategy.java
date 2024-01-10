@@ -22,14 +22,14 @@ public class SimpleBotStrategy implements Strategy {
     private final Comparator<Card> CARD_ON_HAND_COMP = (c1, c2) -> {
         int[] cmpArr1 = new int[]{
                 c1.getSuitIndex() == trumpSuitIndex ? 1 : 0,
-                c1.getSuitIndex(),
-                c1.getValueIndex()
+                c1.getValueIndex(),
+                c1.getSuitIndex()
         };
 
         int[] cmpArr2 = new int[]{
                 c2.getSuitIndex() == trumpSuitIndex ? 1 : 0,
-                c2.getSuitIndex(),
-                c2.getValueIndex()
+                c2.getValueIndex(),
+                c2.getSuitIndex()
         };
 
         return Arrays.compare(cmpArr1, cmpArr2);
@@ -37,13 +37,9 @@ public class SimpleBotStrategy implements Strategy {
     private Player player;
     @Override
     public Turn askForAttack(GameStatus gameStatus) {
-        trumpSuitIndex = gameStatus.getTrumpSuitIndex();
-        sortCardsOnHand();
-
         GameConfig gameConfig = gameStatus.getGameConfig();
         // save trump suit
         trumpSuitIndex = gameStatus.getTrumpSuitIndex();
-        sortCardsOnHand();
         // moveTurn
         for (int i = 0; i < player.countCardsOnHand(); i++) {
             Card card = player.peekCardAt(i);
@@ -56,7 +52,6 @@ public class SimpleBotStrategy implements Strategy {
     @Override
     public Turn askForDefend(GameStatus gameStatus) {
         trumpSuitIndex = gameStatus.getTrumpSuitIndex();
-        sortCardsOnHand();
 
         GameConfig gameConfig = gameStatus.getGameConfig();
         // Первый неотбитый контейнер
@@ -82,6 +77,7 @@ public class SimpleBotStrategy implements Strategy {
     @Override
     public void setPlayer(Player player) {
         this.player = player;
+        trumpSuitIndex = player.getGameConfig().initialTrumpSuitIndex();
     }
 
     @Override

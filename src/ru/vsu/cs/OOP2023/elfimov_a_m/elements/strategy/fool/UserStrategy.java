@@ -38,12 +38,12 @@ public class UserStrategy implements Strategy {
     @Override
     public Turn askForAttack(GameStatus gameStatus) {
         trumpSuitIndex = gameStatus.getTrumpSuitIndex();
-        sortCardsOnHand();
         return ConsoleToUser.askForAttack(gameStatus, player);
     }
 
     @Override
     public Turn askForDefend(GameStatus gameStatus) {
+        trumpSuitIndex = gameStatus.getTrumpSuitIndex();
         return ConsoleToUser.askForDefend(gameStatus, player);
     }
 
