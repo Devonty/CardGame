@@ -11,6 +11,7 @@ public interface GameConfig {
     int cardValuesCount();
 
     int cardSuitsCount();
+    int initialTrumpSuitIndex();
 
     String getSuitByIndex(int suitIndex);
     String getValueByIndex(int valueIndex);

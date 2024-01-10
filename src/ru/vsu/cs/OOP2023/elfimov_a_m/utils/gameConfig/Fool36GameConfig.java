@@ -28,6 +28,7 @@ public class Fool36GameConfig implements GameConfig {
     private final int maxPlayerCount;
     private final int minPlayerCount;
     private final int maxCardsOnHand;
+    private final int initialTrumpSuitIndex;
     private final GameRules gameRules;
     private final CardDeckFactory cardDeckFactory;
     private final GameDeskFactory gameDeskFactory;
@@ -37,6 +38,7 @@ public class Fool36GameConfig implements GameConfig {
         this.suitCount = 4;
         this.maxCardsOnDesk = 6;
         this.maxCardsOnHand = 6;
+        this.initialTrumpSuitIndex = generateTrumpSuitIndex();
 
         this.minPlayerCount = 2;
         this.maxPlayerCount = 6;
@@ -74,6 +76,11 @@ public class Fool36GameConfig implements GameConfig {
     @Override
     public int cardSuitsCount() {
         return suitCount;
+    }
+
+    @Override
+    public int initialTrumpSuitIndex() {
+        return initialTrumpSuitIndex;
     }
 
     @Override
