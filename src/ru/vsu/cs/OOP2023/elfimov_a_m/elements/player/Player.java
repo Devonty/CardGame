@@ -2,12 +2,15 @@ package ru.vsu.cs.OOP2023.elfimov_a_m.elements.player;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.turn.Turn;
 
 import java.util.Comparator;
 
 public interface Player{
     void setStatus(playerStatus status);
+
+    GameConfig getGameConfig();
 
     enum playerStatus {WON, PLAYING, LOSE};
 
