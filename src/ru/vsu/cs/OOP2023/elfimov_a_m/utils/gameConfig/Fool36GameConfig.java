@@ -11,6 +11,7 @@ import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.Player;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.PlayerFactory;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.player.fool.FoolPlayerFactory;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.PlayerList;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.TrumpProvider;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameRules.FoolGameRules;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameRules.GameRules;
 
@@ -28,22 +29,21 @@ public class Fool36GameConfig implements GameConfig {
     private final int maxPlayerCount;
     private final int minPlayerCount;
     private final int maxCardsOnHand;
-    private final int initialTrumpSuitIndex;
     private final GameRules gameRules;
     private final CardDeckFactory cardDeckFactory;
     private final GameDeskFactory gameDeskFactory;
 
-    public Fool36GameConfig() {
+    public Fool36GameConfig(TrumpProvider trumpProvider) {
         this.valueCount = 9;
         this.suitCount = 4;
         this.maxCardsOnDesk = 6;
         this.maxCardsOnHand = 6;
-        this.initialTrumpSuitIndex = generateTrumpSuitIndex();
 
         this.minPlayerCount = 2;
         this.maxPlayerCount = 6;
 
-        this.gameRules = new FoolGameRules(this);
+        this.gameRules = new FoolGameRules(this, trumpProvider);
+
         this.cardDeckFactory = new FoolCardDeckFactory(this);
         this.gameDeskFactory = new FoolGameDeskFactory(this);
     }
@@ -76,11 +76,6 @@ public class Fool36GameConfig implements GameConfig {
     @Override
     public int cardSuitsCount() {
         return suitCount;
-    }
-
-    @Override
-    public int initialTrumpSuitIndex() {
-        return initialTrumpSuitIndex;
     }
 
     @Override
