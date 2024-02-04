@@ -12,7 +12,9 @@ import ru.vsu.cs.OOP2023.elfimov_a_m.elements.strategy.StrategyFactoryManager;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.PlayerList;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameProxy;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.Fool36GameConfigFactory;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfigFactory;
 
 import java.util.Set;
 
@@ -30,8 +32,10 @@ public class Game implements GameStatus {
     private int trumpSuitIndex;
     private int defenderIndex = 0;
 
-    public Game(GameConfig gameConfig, StrategyFactoryManager strategyFactoryManager) {
-        this.gameConfig = gameConfig;
+    public Game(GameConfigFactory gameConfigFactory, StrategyFactoryManager strategyFactoryManager) {
+        this.gameStatus = new GameProxy(this);
+        this.gameConfig = gameConfigFactory.getGameConfig(getGameStatus());
+
         this.gameDesk = gameConfig.getGameDesk();
         this.cardDeck = gameConfig.getCardDeck();
         this.trumpSuitIndex = gameConfig.generateTrumpSuitIndex();
@@ -40,8 +44,6 @@ public class Game implements GameStatus {
         this.playerFactory = new FoolPlayerFactory(gameConfig);
 
         this.strategyFactoryManager = strategyFactoryManager;
-
-        this.gameStatus = new GameProxy(this);
         this.gameController = new GameController(this);
     }
 

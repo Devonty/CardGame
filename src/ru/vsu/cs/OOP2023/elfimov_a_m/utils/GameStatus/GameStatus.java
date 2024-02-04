@@ -1,13 +1,13 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus;
 
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.cardContainer.CardContainer;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.TrumpProvider;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
 
 import java.util.Set;
 
-public interface GameStatus {
+public interface GameStatus extends TrumpProvider {
     CardContainer getCardContainerAt(int index);
-    int getTrumpSuitIndex();
     int getContainerCount();
     int getNotBeatenCount();
     int currentPlayerCount();

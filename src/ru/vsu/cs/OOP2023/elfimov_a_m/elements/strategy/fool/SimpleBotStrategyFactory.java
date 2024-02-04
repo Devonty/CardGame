@@ -1,6 +1,5 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.elements.strategy.fool;
 
-import org.hamcrest.Factory;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.strategy.Strategy;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.strategy.StrategyFactory;
 public class SimpleBotStrategyFactory implements StrategyFactory {

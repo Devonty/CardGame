@@ -51,7 +51,7 @@ public class FoolPlayer implements Player {
     @Override
     public void addCard(Card cardToAdd) {
         cardsOnHand.add(cardToAdd);
-        strategy.sortCardsOnHand();
+        // strategy.sortCardsOnHand();
     }
 
     @Override

@@ -1,13 +1,17 @@
 package ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameRules;
 
+import ru.vsu.cs.OOP2023.elfimov_a_m.Game;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.Card;
 import ru.vsu.cs.OOP2023.elfimov_a_m.elements.cardContainer.CardContainer;
+import ru.vsu.cs.OOP2023.elfimov_a_m.utils.TrumpProvider;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.gameConfig.GameConfig;
 import ru.vsu.cs.OOP2023.elfimov_a_m.utils.GameStatus.GameStatus;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 public class FoolGameRules implements GameRules {
+    private final TrumpProvider trumpProvider;
     private final GameConfig gameConfig;
 
     public final Comparator<Card> CARD_COMP = new Comparator<Card>() {
@@ -20,12 +24,13 @@ public class FoolGameRules implements GameRules {
         }
 
         public boolean isTrump(Card card) {
-            return card.getSuitIndex() == gameConfig.generateTrumpSuitIndex();
+            return Objects.equals(card.getSuitIndex(), trumpProvider.getTrumpSuitIndex());
         }
     };
 
-    public FoolGameRules(GameConfig gameConfig) {
+    public FoolGameRules(GameConfig gameConfig, TrumpProvider trumpProvider) {
         this.gameConfig = gameConfig;
+        this.trumpProvider = trumpProvider;
     }
 
     @Override
